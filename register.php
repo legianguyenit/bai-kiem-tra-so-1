@@ -12,7 +12,6 @@
 <?php
     if (isset($_COOKIE['loggedin']) && $_COOKIE['loggedin'] == "true") {
         header("location: dashboard.php");
-        exit();
     }
 ?>
 <?php
@@ -51,7 +50,6 @@
             setcookie("email", $email, time() + (86400 * 30), "/");
             setcookie("password", $password, time() + (86400 * 30), "/");
             header("location: login.php");
-            exit();
         }
     }
 ?>
