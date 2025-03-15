@@ -49,16 +49,17 @@
     }
 ?>
 <body class="bg-blue-100"> 
-    <main class="flex flex-col items-center justify-center min-h-screen text-center px-6">
-        <div class="bg-white p-8 rounded-lg shadow-md w-full max-w-md">
+    <main class="flex flex-col items-center justify-start min-h-screen text-center px-6 mt-20">
+    <div class="bg-white p-8 rounded-lg shadow-md w-full max-w-md">
             <h2 class="text-2xl font-bold mb-6">Liên hệ với chúng tôi</h2>
             <?php
                 if (!empty($sent_success)) {
                     echo '<div class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded-md">
                             <p>' . htmlspecialchars($sent_success) . '</p>
                         </div>';
-                }
-            ?>            <form action="contact.php" method="POST">
+                    }
+                ?>  
+            <form action="contact.php" method="POST">
                 <div class="mb-4 text-left">
                     <label class="block text-gray-700">Họ và Tên</label>
                     <input type="text" placeholder="Nhập họ tên" name="fullname" value="<?php echo $fullname?>" class="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">

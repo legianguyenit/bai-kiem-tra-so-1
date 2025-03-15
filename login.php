@@ -6,9 +6,15 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Register</title>
+    <title>Login</title>
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
+<?php
+    if (isset($_COOKIE['loggedin']) && $_COOKIE['loggedin'] == "true") {
+        header("location: dashboard.php");
+        exit();
+    }
+?>
 <?php
     $errors_login = [];
     $errors = [];
@@ -35,6 +41,7 @@
         if (empty($errors)) {
             if (isset($_COOKIE["email"]) && isset($_COOKIE["password"])) {
                 if ($_COOKIE["email"] == $email && $_COOKIE["password"] == $password) {
+                    setcookie("loggedin", "true", time() + 3600, "/");
                     header("location: dashboard.php");
                     exit();
                 } else {
@@ -54,7 +61,7 @@
 ?>
 
 <body class="bg-blue-100"> 
-    <main class="flex flex-col items-center justify-center min-h-screen text-center px-6">
+    <main class="flex flex-col items-center justify-start min-h-screen text-center px-6 mt-20">
         <div class="bg-white p-8 rounded-lg shadow-md w-full max-w-md">
             <h2 class="text-2xl font-bold mb-6">Đăng Nhập</h2>
             <?php
