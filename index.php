@@ -9,6 +9,12 @@
     <title>Trang Web Của Bạn</title>
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
+<?php
+    if (isset($_COOKIE['loggedin']) && $_COOKIE['loggedin'] == "true") {
+        header("location: dashboard.php");
+        exit();
+    }
+?>
 <body class="bg-blue-100">
     <main class="flex flex-col items-center justify-center h-screen text-center px-6">
         <h2 class="text-2xl md:text-3xl font-bold">Chào Mừng Đến Với (tên trang web của bạn)</h2>

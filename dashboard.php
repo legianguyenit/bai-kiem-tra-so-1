@@ -28,9 +28,7 @@
 </div>
 
 
-      <button class="mt-6 bg-blue-600 text-white px-6 py-2 rounded-md hover:bg-blue-700">
-      Quản Lý Sản Phẩm
-      </button>
+      <button class="mt-6 bg-blue-600 text-white px-6 py-2 rounded-md hover:bg-blue-700"><a href="products/index.php">Quản lý sản phẩm</a></button>
    </main>
 </body>
 <?php
