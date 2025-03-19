@@ -9,6 +9,13 @@
     <title>Trang Tổng Quan</title>
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
+<?php
+    if (!isset($_COOKIE['loggedin'])) {
+        header("location: ../login.php");
+        exit();
+    }
+?>
+
 <body class="bg-blue-100">
     <main class="flex flex-col items-center justify-center h-screen text-center px-6">
     <div class="bg-white p-6 rounded-lg shadow-lg w-full max-w-3xl">

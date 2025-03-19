@@ -58,7 +58,7 @@
                             <p>' . htmlspecialchars($sent_success) . '</p>
                         </div>';
                     }
-                ?>  
+            ?>  
             <form action="contact.php" method="POST">
                 <div class="mb-4 text-left">
                     <label class="block text-gray-700">Họ và Tên</label>

@@ -12,6 +12,7 @@
 <?php
     if (isset($_COOKIE['loggedin']) && $_COOKIE['loggedin'] == "true") {
         header("location: dashboard.php");
+        exit();
     }
 ?>
 <?php
@@ -49,7 +50,9 @@
             setcookie("fullname", $fullname, time() + (86400 * 30), "/");
             setcookie("email", $email, time() + (86400 * 30), "/");
             setcookie("password", $password, time() + (86400 * 30), "/");
+            
             header("location: login.php");
+            exit();
         }
     }
 ?>
@@ -94,7 +97,7 @@
                 </div>
                 <div class="mb-4 text-left">
                     <label class="block text-gray-700">Xác nhận mật khẩu</label>
-                    <input type="password" placeholder="Nhập mật khẩu" name="confirm_password" value="<?php echo $confirm_password?>" class="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    <input type="password" placeholder="Xác nhận mật khẩu" name="confirm_password" value="<?php echo $confirm_password?>" class="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
                     <?php
                         if (isset($errors['confirm_password'])) {
                             echo "<div style='color: red;'>";
