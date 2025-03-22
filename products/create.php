@@ -35,9 +35,25 @@
 
         if (empty($errors)) {
             $sent_success = "$product_name đã thêm sản phẩm đến chúng tôi. Trân trọng";
-            setcookie("product_name", $product_name, time() + (86400 * 30), "/");
-            setcookie("product_price", $product_price, time() + (86400 * 30), "/");
-            setcookie("product_description", $product_description, time() + (86400 * 30), "/");
+
+            $last_product_id = isset($_COOKIE['last_product_id']) ? $_COOKIE['last_product_id'] : 0;
+            $new_product_id = $last_product_id + 1;
+            
+            $new_product = [
+                'product_id' => $new_product_id,
+                'product_name' => $product_name,
+                'product_price' => $product_price,
+                'product_description' => $product_description,
+            ];
+        
+            if (isset($_COOKIE['products'])) {
+                $products = json_decode($_COOKIE['products']);
+            }
+        
+            $products[] = $new_product;
+        
+            setcookie("products", json_encode($products), time() + (86400 * 30), "/");
+            setcookie("last_product_id", $new_product_id, time() + (86400 * 30), "/");
             $product_name = $product_price = $product_description = "";
         }
     }
@@ -77,7 +93,7 @@
                     ?>
                 </div>
                 <div class="mb-4 text-left">
-                    <label class="block text-gray-700 font-medium mb-1">Nội Tả</label>
+                    <label class="block text-gray-700">Mô Tả</label>
                     <textarea name="product_description" placeholder="Nhập tả sản phẩm..." value="<?php echo $product_description?>" class="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 h-32"></textarea>
                     <?php
                         if (isset($errors['product_description'])) {
