@@ -104,7 +104,7 @@
                         }
                     ?>
                 </div>
-                <button class="w-full bg-blue-600 text-white py-2 rounded-md hover:bg-blue-700">Đăng Ký</button>
+                <button class="w-full bg-blue-600 text-white py-2 rounded-md hover:bg-blue-700">Gửi Liên Hệ</button>
             </form>
         </div>  
     </main>

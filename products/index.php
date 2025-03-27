@@ -25,24 +25,40 @@
                 <tr class="bg-gray-100">
                     <th class="p-3 border text-left font-semibold">ID</th>
                     <th class="p-3 border text-left font-semibold">Tên Sản Phẩm</th>
+                    <th class="p-3 border text-left font-semibold">Mô Tả Sản Phẩm</th>
                     <th class="p-3 border text-left font-semibold">Giá</th>
                     <th class="p-3 border text-left font-semibold">Hành Động</th>
                 </tr>
             </thead>
             <tbody>
-                <tr class="border-b">
-                    <td class="p-3 border">1</td>
-                    <td class="p-3 border">Áo Thun Đen</td>
-                    <td class="p-3 border">200.000 VNĐ</td>
-                    <td class="p-3 border flex space-x-2">
-                        <button class="bg-blue-600 text-white px-4 py-1 rounded">Sửa</button>
-                        <button class="bg-red-500 text-white px-4 py-1 rounded">Xóa</button>
-                    </td>
-                </tr>
+            <?php
+                if (!empty($_COOKIE['products'])) {
+                    $products = json_decode($_COOKIE['products'], true);
+
+                    foreach ($products as $product) {
+                        echo "<tr class='border-b'>
+                                <td class='p-3 border'>{$product['product_id']}</td>
+                                <td class='p-3 border'>{$product['product_name']}</td>
+                                <td class='p-3 border'>{$product['product_description']}</td>
+                                <td class='p-3 border'>{$product['product_price']} VNĐ</td>
+                                <td class='p-3 border flex space-x-2'>
+                                    <a href='update.php?id={$product['product_id']}'>
+                                        <button class='bg-blue-600 text-white px-4 py-1 rounded'>Sửa</button>
+                                    </a>
+                                    <a href='delete.php?id={$product['product_id']}'>
+                                        <button class='bg-red-600 text-white px-4 py-1 rounded'>Xóa</button>
+                                    </a>
+                                </td>
+                            </tr>";
+                        }
+                    } else {
+                        echo "<tr><td colspan='4' class='p-3 border text-center'>Không có sản phẩm</td></tr>";
+                    }
+                ?>
             </tbody>
         </table>
         <div class="mt-4 text-center">
-            <button class="bg-purple-600 text-white px-6 py-2 rounded"><a href="create.php">Thêm Sản Phẩm</a></button>
+            <button class="bg-blue-600 text-white px-6 py-2 rounded"><a href="create.php">Thêm Sản Phẩm</a></button>
         </div>
     </div>
     </main>
