@@ -17,9 +17,10 @@
                 <img src="../assets/images/thecao5s.png" alt="Logo" class="h-12 w-auto">
             </h1>
             <nav>
-                <ul id="desktop-menu" class="flex flex-row space-x-6">
+                <ul id="desktop-menu" class="flex flex-row space-x-2">
                     <li><a href="../index.php" class="block py-2 px-4 text-gray-700 hover:text-blue-500">Trang Chủ</a></li>
                     <li><a href="../products/index.php" class="block py-2 px-4 text-gray-700 hover:text-blue-500">Sản phẩm</a></li>
+                    <li><a href="../users/index.php" class="block py-2 px-4 text-gray-700 hover:text-blue-500">Người dùng</a></li>
                     <li><a href="../contact.php" class="block py-2 px-4 text-gray-700 hover:text-blue-500">Liên Hệ</a></li>
                     <li><a href="../login.php" class="block py-2 px-4 text-gray-700 hover:text-blue-500">
                     <?php
@@ -49,6 +50,7 @@
             <ul id="mobile-menu" class="flex flex-col w-full">
                 <li><a href="../index.php" class="block py-3 px-4 text-gray-700 hover:text-blue-500 border-b">Trang Chủ</a></li>
                 <li><a href="../products/index.php" class="block py-3 px-4 text-gray-700 hover:text-blue-500 border-b">Sản phẩm</a></li>
+                <li><a href="../users/index.php" class="block py-3 px-4 text-gray-700 hover:text-blue-500 border-b">Người dùng</a></li>
                 <li><a href="../contact.php" class="block py-3 px-4 text-gray-700 hover:text-blue-500 border-b">Liên Hệ</a></li>
                 <li><a href="../login.php" class="block py-3 px-4 text-gray-700 hover:text-blue-500 border-b">
                 <?php

@@ -1,4 +1,6 @@
 <?php
+    session_start();
+    include 'config/database.php';
     include 'includes/header.php';
 ?>
 <!DOCTYPE html>
@@ -11,7 +13,7 @@
 </head>
 <?php
     if (!isset($_COOKIE['loggedin'])) {
-        header("location: login.php");
+        header("Location: login.php");
         exit();
     }
 ?>
