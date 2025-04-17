@@ -1,5 +1,7 @@
 <?php
+    session_start();
     include 'includes/header.php';
+    include 'config/database.php';
 ?>
 <!DOCTYPE html>
 <html lang="vi">
@@ -14,49 +16,56 @@
         header("location: dashboard.php");
         exit();
     }
+    $successMessage = '';
+    if (isset($_SESSION['success_message'])) {
+        $successMessage = $_SESSION['success_message'];
+        unset($_SESSION['success_message']);
+    }
 ?>
 <?php
     $errors_login = [];
     $errors = [];
     $email = $password = "";
+    
     if ($_SERVER['REQUEST_METHOD'] == "POST") {
         $email = htmlspecialchars($_POST['email']);
         $password = htmlspecialchars($_POST['password']);
-
-        // Kiểm tra email
+    
+        // Kiểm tra email và password
         if (empty($email)) {
             $errors['email'] = "Vui lòng nhập email.";
         } elseif (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
             $errors['email'] = "Email không hợp lệ.";
         }
-
-        // Kiểm tra mật khẩu
         if (empty($password)) {
             $errors['password'] = "Vui lòng nhập mật khẩu.";
         } elseif (strlen($password) < 6) {
             $errors['password'] = "Mật khẩu phải ít nhất 6 ký tự.";
         }
-
-        // Nếu không có lỗi validation
+    
         if (empty($errors)) {
-            if (isset($_COOKIE["email"]) && isset($_COOKIE["password"])) {
-                if ($_COOKIE["email"] == $email && $_COOKIE["password"] == $password) {
-                    setcookie("loggedin", "true", time() + 3600, "/");
+            // Truy vấn lấy thông tin người dùng dựa trên email
+            $sql = "SELECT * FROM users WHERE email = '$email'";
+            $userResult  = $conn->query($sql);
+        
+            // Kiểm tra xem email có tồn tại không
+            if ($userResult->num_rows === 0) {
+                $errors['email'] = "Email không tồn tại.";
+            } else {
+                // Lấy dữ liệu người dùng từ truy vấn
+                $userData = $userResult->fetch_assoc();
+        
+                // Xác thực mật khẩu
+                if (!password_verify($password, $userData['password'])) {
+                    $errors['password'] = "Mật khẩu không đúng.";
+                } else {
+                    setcookie("loggedin", "true", time() + (86400 * 30), "/"); // Cookie hết hạn sau 30 ngày
+                    setcookie("fullname", $userData['fullname'], time() + (86400 * 30), "/");
                     header("location: dashboard.php");
                     exit();
-                } else {
-                    if ($_COOKIE["email"] !== $email && $_COOKIE["password"] !== $password) {
-                        $errors_login['common'] = "Email và mật khẩu không đúng.";
-                    } elseif ($_COOKIE["email"] !== $email) {
-                        $errors_login['email'] = "Email không chính xác.";
-                    } elseif ($_COOKIE["password"] !== $password) {
-                        $errors_login['password'] = "Mật khẩu không chính xác.";
-                    }
                 }
-            } else {
-                $errors_login['common'] = "Không tìm thấy thông tin đăng nhập.";
             }
-        }
+        }        
     }
 ?>
 
@@ -70,6 +79,13 @@
                     echo $errors_login['common'];
                     echo "</div>";
                 }
+                
+                if (!empty($successMessage)): ?>
+                    <div class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded relative mt-4" role="alert">
+                        <strong class="font-bold">Đăng ký thành công! </strong>
+                        <span class="block sm:inline"><?php echo htmlspecialchars($successMessage); ?></span>
+                    </div>
+                <?php endif;            
             ?>
             <form action="login.php" method="POST">
                 <div class="mb-4 text-left">

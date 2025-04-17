@@ -1,7 +1,7 @@
 <?php
     session_start();
-    include 'includes/header.php';
-    include 'config/database.php';
+    include '../includes/header.php';
+    include '../config/database.php';
 ?>
 <!DOCTYPE html>
 <html lang="vi">
@@ -12,17 +12,9 @@
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
 <?php
-    if (isset($_COOKIE['registered'])) {
-        header("Location: login.php");
-        exit();
-    }
-?>
-<?php
     $errors = [];
     $fullname = $email = $password = $confirm_password = "";
-
     if ($_SERVER['REQUEST_METHOD'] == "POST") {
-        // Lấy và làm sạch dữ liệu nhập vào
         $fullname = htmlspecialchars($_POST['fullname']);
         $email = htmlspecialchars($_POST['email']);
         $password = htmlspecialchars($_POST['password']);
@@ -62,9 +54,8 @@
                 $hashed_password = password_hash($password, PASSWORD_DEFAULT);
                 $sql = "INSERT INTO users (fullname, email, password) VALUES ('$fullname', '$email', '$hashed_password')";
                 if ($conn->query($sql) === TRUE) {
-                    setcookie("registered", "true", time() + 86400, "/");
-                    $_SESSION['success_message'] = "Vui lòng đăng nhập.";
-                    header("Location: login.php");
+                    $_SESSION['success_message'] = "Thêm người dùng thành công!.";
+                    header("Location: index.php");
                     exit();
                 } else {
                     echo "🔴 Lỗi: " . $conn->error;
@@ -73,12 +64,11 @@
         }
     }
 ?>
-
 <body class="bg-blue-100"> 
     <main class="flex flex-col items-center justify-start min-h-screen text-center px-6 mt-20">
-        <div class="bg-white p-8 rounded-lg shadow-md w-full max-w-md">
-            <h2 class="text-2xl font-bold mb-6">Đăng Ký</h2>
-            <form action="register.php" method="POST">
+    <div class="bg-white p-8 rounded-lg shadow-md w-full max-w-md">
+            <h2 class="text-2xl font-bold mb-6">Thêm người dùng</h2> 
+            <form action="create.php" method="POST">
                 <div class="mb-4 text-left">
                     <label class="block text-gray-700">Họ và tên</label>
                     <input type="text" placeholder="Nhập họ tên" name="fullname" value="<?php echo $fullname?>" class="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
@@ -123,18 +113,12 @@
                         }
                     ?>
                 </div>
-                <button class="w-full bg-blue-600 text-white py-2 rounded-md hover:bg-blue-700">Đăng Ký</button>
+                <button class="w-full bg-blue-600 text-white py-2 rounded-md hover:bg-blue-700">Thêm người dùng</button>
             </form>
-            <div class="mt-4 text-sm">
-                Đã có tài khoản? <a href="login.php" class="text-blue-600 hover:underline">Đăng Nhập</a>
-            </div>
-            <div class="mt-2 text-sm">
-                <a href="reset-password.php" class="text-blue-600 hover:underline">Quên mật khẩu?</a>
-            </div>
         </div>  
     </main>
 <?php
-    include 'includes/footer.php';
+    include '../includes/footer.php';
 ?>
 </body>
 </html>
