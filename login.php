@@ -16,9 +16,9 @@
         header("location: dashboard.php");
         exit();
     }
-    $successMessage = '';
+    $success_message = '';
     if (isset($_SESSION['success_message'])) {
-        $successMessage = $_SESSION['success_message'];
+        $success_message = $_SESSION['success_message'];
         unset($_SESSION['success_message']);
     }
 ?>
@@ -80,12 +80,11 @@
                     echo "</div>";
                 }
                 
-                if (!empty($successMessage)): ?>
-                    <div class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded relative mt-4" role="alert">
-                        <strong class="font-bold">Đăng ký thành công! </strong>
-                        <span class="block sm:inline"><?php echo htmlspecialchars($successMessage); ?></span>
-                    </div>
-                <?php endif;            
+                if (!empty($success_message)) {
+                    echo '<div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative mt-4" role="alert">';
+                    echo '<span class="block sm:inline">' . htmlspecialchars($success_message) . '</span>';
+                    echo '</div>';
+                }
             ?>
             <form action="login.php" method="POST">
                 <div class="mb-4 text-left">

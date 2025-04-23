@@ -63,7 +63,7 @@
                 $sql = "INSERT INTO users (fullname, email, password) VALUES ('$fullname', '$email', '$hashed_password')";
                 if ($conn->query($sql) === TRUE) {
                     setcookie("registered", "true", time() + 86400, "/");
-                    $_SESSION['success_message'] = "Vui lòng đăng nhập.";
+                    $_SESSION['success_message'] = "Đăng ký thành công, vui lòng đăng nhập!";
                     header("Location: login.php");
                     exit();
                 } else {
