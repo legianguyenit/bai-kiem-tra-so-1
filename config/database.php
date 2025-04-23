@@ -2,7 +2,7 @@
     $servername = "localhost"; // hoặc IP server
     $username = "root"; // tên đăng nhập MySQL
     $password = ""; // mật khẩu
-    $dbname = "project_stem3"; // tên cơ sở dữ liệu
+    $dbname = "project"; // tên cơ sở dữ liệu
     
     // Tạo kết nối
     $conn = new mysqli($servername, $username, $password, $dbname);
