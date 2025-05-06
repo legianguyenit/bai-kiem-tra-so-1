@@ -6,7 +6,6 @@
 ?>
 <?php
     session_start();
-    include '../includes/header.php';
     include '../config/database.php';
 ?>
 <?php
@@ -30,6 +29,9 @@
     <title>Quản trị người dùng</title>
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
+<?php
+    include '../includes/header.php';
+?>
 <body class="bg-blue-100">
     <main class="flex flex-col items-center justify-center min-h-screen text-center px-4 py-8">
     <div class="bg-white p-6 rounded-lg shadow-lg w-full max-w-5xl overflow-x-auto">
@@ -56,7 +58,6 @@
                     <th class="p-3 border text-left font-semibold">Ảnh đại diện</th>
                     <th class="p-3 border text-left font-semibold">Họ và tên</th>
                     <th class="p-3 border text-left font-semibold">Email</th>
-                    <!-- <th class="p-3 border text-left font-semibold">Password</th> -->
                     <th class="p-3 border text-left font-semibold">Ngày tạo</th>
                     <th class="p-3 border text-left font-semibold">Ngày cập nhật</th>
                     <th class="p-3 border text-left font-semibold">Hành Động</th>
@@ -80,14 +81,6 @@
                                 </td>
                                 <td class="p-3 border">' . htmlspecialchars($row["fullname"]) . '</td>
                                 <td class="p-3 border">' . htmlspecialchars($row["email"]) . '</td>
-                                <!-- <td class="p-3 border max-w-xs overflow-x-auto">
-                                    <div class="flex items-center gap-2">
-                                        <span class="password hidden break-all">' . htmlspecialchars($row["password"]) . '</span>
-                                        <button class="toggle-password text-blue-600 hover:text-blue-800">
-                                            👁
-                                        </button>
-                                    </div>
-                                </td> -->
                                 <td class="p-3 border">' . $row["created_at"] . '</td>
                                 <td class="p-3 border">' . $row["updated_at"] . '</td>
                                 <td class="p-3 border">
