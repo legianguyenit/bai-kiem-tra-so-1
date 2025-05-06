@@ -1,7 +1,61 @@
 <?php
+    if (isset($_COOKIE['loggedin']) && $_COOKIE['loggedin'] === "true") {
+        header("Location: dashboard.php");
+        exit();
+    }
+?>
+<?php
     session_start();
     include 'includes/header.php';
     include 'config/database.php';
+?>
+<?php
+    $success_message = '';
+    if (isset($_SESSION['success_message'])) {
+        $success_message = $_SESSION['success_message'];
+        unset($_SESSION['success_message']);
+    }
+
+    $errors_login = [];
+    $errors       = [];
+    $email = $password = "";
+    if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+        $email    = htmlspecialchars($_POST['email']);
+        $password = htmlspecialchars($_POST['password']);
+
+        if (empty($email)) {
+            $errors['email'] = "Vui lòng nhập email.";
+        } elseif (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+            $errors['email'] = "Email không hợp lệ.";
+        }
+
+        if (empty($password)) {
+            $errors['password'] = "Vui lòng nhập mật khẩu.";
+        } elseif (strlen($password) < 6) {
+            $errors['password'] = "Mật khẩu phải ít nhất 6 ký tự.";
+        }
+
+        if (empty($errors)) {
+            $sql        = "SELECT * FROM users WHERE email = '$email'";
+            $userResult = $conn->query($sql);
+
+            if ($userResult->num_rows === 0) {
+                $errors['email'] = "Email không tồn tại.";
+            } else {
+                $userData = $userResult->fetch_assoc();
+
+                if (!password_verify($password, $userData['password'])) {
+                    $errors['password'] = "Mật khẩu không đúng.";
+                } else {
+                    // Đặt cookie và redirect
+                    setcookie("loggedin", "true", time() + 86400 * 30, "/");
+                    setcookie("fullname",  $userData['fullname'], time() + 86400 * 30, "/");
+                    header("Location: dashboard.php");
+                    exit();
+                }
+            }
+        }
+    }
 ?>
 <!DOCTYPE html>
 <html lang="vi">
@@ -11,64 +65,6 @@
     <title>Login</title>
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<?php
-    if (isset($_COOKIE['loggedin']) && $_COOKIE['loggedin'] == "true") {
-        header("location: dashboard.php");
-        exit();
-    }
-    $success_message = '';
-    if (isset($_SESSION['success_message'])) {
-        $success_message = $_SESSION['success_message'];
-        unset($_SESSION['success_message']);
-    }
-?>
-<?php
-    $errors_login = [];
-    $errors = [];
-    $email = $password = "";
-    
-    if ($_SERVER['REQUEST_METHOD'] == "POST") {
-        $email = htmlspecialchars($_POST['email']);
-        $password = htmlspecialchars($_POST['password']);
-    
-        // Kiểm tra email và password
-        if (empty($email)) {
-            $errors['email'] = "Vui lòng nhập email.";
-        } elseif (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
-            $errors['email'] = "Email không hợp lệ.";
-        }
-        if (empty($password)) {
-            $errors['password'] = "Vui lòng nhập mật khẩu.";
-        } elseif (strlen($password) < 6) {
-            $errors['password'] = "Mật khẩu phải ít nhất 6 ký tự.";
-        }
-    
-        if (empty($errors)) {
-            // Truy vấn lấy thông tin người dùng dựa trên email
-            $sql = "SELECT * FROM users WHERE email = '$email'";
-            $userResult  = $conn->query($sql);
-        
-            // Kiểm tra xem email có tồn tại không
-            if ($userResult->num_rows === 0) {
-                $errors['email'] = "Email không tồn tại.";
-            } else {
-                // Lấy dữ liệu người dùng từ truy vấn
-                $userData = $userResult->fetch_assoc();
-        
-                // Xác thực mật khẩu
-                if (!password_verify($password, $userData['password'])) {
-                    $errors['password'] = "Mật khẩu không đúng.";
-                } else {
-                    setcookie("loggedin", "true", time() + (86400 * 30), "/"); // Cookie hết hạn sau 30 ngày
-                    setcookie("fullname", $userData['fullname'], time() + (86400 * 30), "/");
-                    header("location: dashboard.php");
-                    exit();
-                }
-            }
-        }        
-    }
-?>
-
 <body class="bg-blue-100"> 
     <main class="flex flex-col items-center justify-start min-h-screen text-center px-6 mt-20">
         <div class="bg-white p-8 rounded-lg shadow-md w-full max-w-md">
@@ -81,7 +77,7 @@
                 }
                 
                 if (!empty($success_message)) {
-                    echo '<div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative mt-4" role="alert">';
+                    echo '<div class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded relative mt-4" role="alert">';
                     echo '<span class="block sm:inline">' . htmlspecialchars($success_message) . '</span>';
                     echo '</div>';
                 }

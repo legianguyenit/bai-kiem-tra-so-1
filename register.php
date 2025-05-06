@@ -1,34 +1,26 @@
 <?php
     session_start();
-    include 'includes/header.php';
-    include 'config/database.php';
-?>
-<!DOCTYPE html>
-<html lang="vi">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Register</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-</head>
-<?php
     if (isset($_COOKIE['registered'])) {
         header("Location: login.php");
         exit();
-    }
+    } elseif (isset($_COOKIE['loggedin']) && $_COOKIE['loggedin'] === "true") {
+        header("Location: dashboard.php");
+        exit();
+    }    
+?>
+<?php
+    include 'includes/header.php';
+    include 'config/database.php';
 ?>
 <?php
     $errors = [];
     $fullname = $email = $password = $confirm_password = "";
-
     if ($_SERVER['REQUEST_METHOD'] == "POST") {
-        // Lấy và làm sạch dữ liệu nhập vào
         $fullname = htmlspecialchars($_POST['fullname']);
         $email = htmlspecialchars($_POST['email']);
         $password = htmlspecialchars($_POST['password']);
         $confirm_password = htmlspecialchars($_POST['confirm_password']);
 
-        // Kiểm tra lỗi
         if (empty($fullname)) {
             $errors['fullname'] = "Vui lòng nhập họ tên.";
         }
@@ -51,7 +43,6 @@
             $errors['confirm_password'] = "Mật khẩu xác nhận không khớp.";
         }
 
-        // Nếu không có lỗi thì thực hiện lưu dữ liệu vào MySQL
         if (empty($errors)) {
             $sql = "SELECT * FROM users WHERE email = '$email'";
             $result = $conn->query($sql);
@@ -73,7 +64,14 @@
         }
     }
 ?>
-
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Register</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
 <body class="bg-blue-100"> 
     <main class="flex flex-col items-center justify-start min-h-screen text-center px-6 mt-20">
         <div class="bg-white p-8 rounded-lg shadow-md w-full max-w-md">

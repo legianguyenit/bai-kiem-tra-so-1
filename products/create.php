@@ -1,5 +1,7 @@
 <?php
+    session_start();
     include '../includes/header.php';
+    include '../config/database.php';
 ?>
 <!DOCTYPE html>
 <html lang="vi">
