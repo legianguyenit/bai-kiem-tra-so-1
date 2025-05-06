@@ -20,16 +20,20 @@
                 <ul id="desktop-menu" class="flex flex-row space-x-2">
                     <li><a href="../index.php" class="block py-2 px-4 text-gray-700 hover:text-blue-500">Trang Chủ</a></li>
                     <li><a href="../products/index.php" class="block py-2 px-4 text-gray-700 hover:text-blue-500">Sản phẩm</a></li>
+                    <li><a href="../categories/index.php" class="block py-2 px-4 text-gray-700 hover:text-blue-500">Danh mục</a></li>
                     <li><a href="../users/index.php" class="block py-2 px-4 text-gray-700 hover:text-blue-500">Người dùng</a></li>
-                    <li><a href="../profile.php" class="block py-2 px-4 text-gray-700 hover:text-blue-500">
+                    <li>
                     <?php
                         if (isset($_COOKIE['loggedin']) && $_COOKIE['loggedin'] === "true" && isset($_COOKIE['fullname'])) {
+                            echo '<a href="../profile.php" class="block py-2 px-4 text-gray-700 hover:text-blue-500">';
                             echo "Hello " . htmlspecialchars($_COOKIE['fullname']);
                         } else {
+                            echo '<a href="../login.php" class="block py-2 px-4 text-gray-700 hover:text-blue-500">';
                             echo "Đăng nhập";
                         }
                     ?>
-                    </a></li>
+                    </a>
+                    </li>
                     <li><a href="../contact.php" class="block py-2 px-4 text-gray-700 hover:text-blue-500">Liên hệ</a></li>
                     <?php
                         if (isset($_COOKIE['loggedin']) && $_COOKIE['loggedin'] === "true") {
@@ -50,15 +54,20 @@
             <ul id="mobile-menu" class="flex flex-col w-full">
                 <li><a href="../index.php" class="block py-3 px-4 text-gray-700 hover:text-blue-500 border-b">Trang Chủ</a></li>
                 <li><a href="../products/index.php" class="block py-3 px-4 text-gray-700 hover:text-blue-500 border-b">Sản phẩm</a></li>
+                <li><a href="../categories/index.php" class="block py-3 px-4 text-gray-700 hover:text-blue-500 border-b">Danh mục</a></li>
                 <li><a href="../users/index.php" class="block py-3 px-4 text-gray-700 hover:text-blue-500 border-b">Người dùng</a></li>
-                <li><a href="../profile.php" class="block py-3 px-4 text-gray-700 hover:text-blue-500 border-b">
+                <li>
                 <?php
                     if (isset($_COOKIE['loggedin']) && $_COOKIE['loggedin'] === "true" && isset($_COOKIE['fullname'])) {
+                        echo '<a href="../profile.php" class="block py-3 px-4 text-gray-700 hover:text-blue-500 border-b">';
                         echo "Hello " . htmlspecialchars($_COOKIE['fullname']);
                     } else {
+                        echo '<a href="../login.php" class="block py-3 px-4 text-gray-700 hover:text-blue-500 border-b">';
                         echo "Đăng nhập";
                     }
                 ?>
+                </a>
+                </li>
                 </a></li>
                 <li><a href="../contact.php" class="block py-3 px-4 text-gray-700 hover:text-blue-500 border-b">Liên Hệ</a></li>
                 <?php

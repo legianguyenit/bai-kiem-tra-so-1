@@ -1,21 +1,11 @@
 <?php
     session_start();
-    include 'config/database.php';
-    include 'includes/header.php';
-?>
-<!DOCTYPE html>
-<html lang="vi">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Trang Tổng Quan</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-</head>
-<?php
     if (!isset($_COOKIE['loggedin'])) {
         header("Location: login.php");
         exit();
     }
+    include 'config/database.php';
+    include 'includes/header.php';
 ?>
 <?php
     if (isset($_COOKIE['products']) && !empty($_COOKIE['products'])) {
@@ -35,6 +25,14 @@
     }
     $logged_in_count = isset($_COOKIE['loggedin']) && $_COOKIE['loggedin'] === "true" ? 1 : 0;
 ?>
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Trang Tổng Quan</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
 <body class="bg-blue-100">
 <main class="flex flex-col items-center justify-center h-screen text-center px-6">
     <h2 class="text-2xl font-bold mb-6">Tổng Quan</h2>
