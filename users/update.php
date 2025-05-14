@@ -1,13 +1,17 @@
 <?php
-    if (!isset($_COOKIE['loggedin'])) {
-        header("location: ../login.php");
-        exit();
-    }
-?>
-<?php
     session_start();
+    include '../includes/header.php';
     include '../config/database.php';
-
+?>
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cập nhật người dùng</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<?php
     if (!isset($_GET['id'])) {
         header('location:index.php');
     }
@@ -23,7 +27,8 @@
     }
 
     $old_avatar = $user_data['avatar'];
-
+?>
+<?php
     $errors = [];
     $fullname = $email = $password = $confirm_password = "";
     $avatar = $old_avatar;
@@ -34,6 +39,7 @@
         $password = htmlspecialchars($_POST['password']);
         $confirm_password = htmlspecialchars($_POST['confirm_password']);
 
+        // Xử lý upload avatar mới
         if (isset($_FILES['avatar']) && $_FILES['avatar']['error'] == 0) {
             $targetDir = "../assets/images/avatar/";
             $avatarName = time() . "_" . basename($_FILES["avatar"]["name"]);
@@ -44,7 +50,7 @@
             
             if (in_array($imageFileType, $allowedTypes)) {
                 if (move_uploaded_file($_FILES["avatar"]["tmp_name"], $targetFile)) {
-                    $avatar = $avatarName;
+                    $avatar = $avatarName; // Cập nhật avatar mới
                 } else {
                     $errors['avatar'] = "Lỗi khi tải lên ảnh.";
                 }
@@ -67,6 +73,7 @@
             $errors['email'] = "Email không hợp lệ.";
         }
 
+        // Xử lý mật khẩu chỉ khi có nhập
         $password_update = '';
         if (!empty($password)) {
             if ($password !== $confirm_password) {
@@ -95,17 +102,6 @@
             }
         }
     }
-?>
-<!DOCTYPE html>
-<html lang="vi">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Cập nhật người dùng</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-</head>
-<?php
-    include '../includes/header.php';
 ?>
 <body class="bg-blue-100"> 
     <main class="flex flex-col items-center justify-start min-h-screen text-center px-6 mt-20">

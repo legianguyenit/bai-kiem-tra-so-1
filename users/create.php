@@ -1,13 +1,16 @@
 <?php
-    if (!isset($_COOKIE['loggedin'])) {
-        header("location: ../login.php");
-        exit();
-    }
-?>
-<?php
     session_start();
+    include '../includes/header.php';
     include '../config/database.php';
 ?>
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Register</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
 <?php
     $errors = [];
     $fullname = $email = $password = $confirm_password = "";
@@ -86,17 +89,6 @@
             }
         }
     }
-?>
-<!DOCTYPE html>
-<html lang="vi">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Quản trị thêm người dùng</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-</head>
-<?php
-    include '../includes/header.php';
 ?>
 <body class="bg-blue-100"> 
     <main class="flex flex-col items-center justify-start min-h-screen text-center px-6 mt-20">
