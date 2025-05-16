@@ -1,16 +1,13 @@
 <?php
+    if (!isset($_COOKIE['loggedin'])) {
+        header("location: ../login.php");
+        exit();
+    }
+?>
+<?php
     session_start();
-    include '../includes/header.php';
     include '../config/database.php';
 ?>
-<!DOCTYPE html>
-<html lang="vi">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Cập nhật người dùng</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-</head>
 <?php
     if (!isset($_GET['id'])) {
         header('location:index.php');
@@ -103,6 +100,17 @@
         }
     }
 ?>
+<?php
+    include '../includes/header.php';
+?>
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cập nhật người dùng</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
 <body class="bg-blue-100"> 
     <main class="flex flex-col items-center justify-start min-h-screen text-center px-6 mt-20">
     <div class="bg-white p-8 rounded-lg shadow-md w-full max-w-md">

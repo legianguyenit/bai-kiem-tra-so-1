@@ -1,3 +1,9 @@
+<?php
+    if (!isset($_COOKIE['loggedin'])) {
+        header("location: ../login.php");
+        exit();
+    }
+?>
 <?php 
     session_start();
     include "../config/database.php"; 

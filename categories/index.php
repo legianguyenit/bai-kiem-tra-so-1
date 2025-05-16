@@ -52,7 +52,7 @@
         <table class="w-full border-collapse text-sm md:text-base">
             <thead>
                 <tr class="bg-gray-100">
-                    <th class="p-3 border text-left font-semibold">ID</th>
+                    <th class="p-3 border text-left font-semibold">Mã danh mục</th>
                     <th class="p-3 border text-left font-semibold">Tên danh mục</th>
                     <th class="p-3 border text-left font-semibold">Mô tả</th>
                     <th class="p-3 border text-left font-semibold">Ngày tạo</th>
@@ -66,15 +66,15 @@
                     while ($row = $result->fetch_assoc()) {
                         echo '
                             <tr class="border-b">
-                                <td class="p-3 border">' . $row["id"] . '</td>
-                                <td class="p-3 border">' . htmlspecialchars($row["name"]) . '</td>
-                                <td class="p-3 border">' . htmlspecialchars($row["description"]) . '</td>
+                                <td class="p-3 border">' . $row["categories_code"] . '</td>
+                                <td class="p-3 border">' . htmlspecialchars($row["categories_name"]) . '</td>
+                                <td class="p-3 border">' . htmlspecialchars($row["categories_description"]) . '</td>
                                 <td class="p-3 border">' . $row["created_at"] . '</td>
                                 <td class="p-3 border">' . $row["updated_at"] . '</td>
                                 <td class="p-3 border">
                                     <div class="flex flex-wrap gap-2 justify-center">
-                                        <a href="update.php?id=' . $row["id"] . '" class="bg-blue-600 text-white px-4 py-1 rounded">Sửa</a>
-                                        <a href="delete.php?id=' . $row["id"] . '" onclick="return confirm(\'Xoá danh mục này?\')" class="bg-red-600 text-white px-4 py-1 rounded">Xóa</a>
+                                        <a href="update.php?categories_code=' . $row["categories_code"] . '" class="bg-blue-600 text-white px-4 py-1 rounded">Sửa</a>
+                                        <a href="delete.php?categories_code=' . $row["categories_code"] . '" onclick="return confirm(\'Xoá danh mục này?\')" class="bg-red-600 text-white px-4 py-1 rounded">Xóa</a>
                                     </div>
                                 </td>
                             </tr>

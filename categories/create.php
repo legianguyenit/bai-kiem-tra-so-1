@@ -1,27 +1,24 @@
 <?php
+    if (!isset($_COOKIE['loggedin'])) {
+        header("location: ../login.php");
+        exit();
+    }
+?>
+<?php
     session_start();
-    include '../includes/header.php';
     include '../config/database.php';
 ?>
-<!DOCTYPE html>
-<html lang="vi">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Quản trị danh mục</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-</head>
 <?php
     $errors = [];
-    $categories_name = $categories_description = "";
+    $categories_name = $categories_description = $categories_code =  "";
     if ($_SERVER['REQUEST_METHOD'] == "POST") {
         $categories_name = htmlspecialchars($_POST['categories_name']);
         $categories_description = htmlspecialchars($_POST['categories_description']);
+        $categories_code = htmlspecialchars($_POST['categories_code']);
     
-        // Kiểm tra lỗi
         if (empty($categories_name)) {
             $errors['categories_name'] = "Vui lòng nhập tên danh mục.";
-        } elseif (strlen($categories_name) < 6) {
+        } elseif (strlen($categories_name) < 3) {
             $errors['categories_name'] = "Danh mục phải ít nhất 1 ký tự.";
         }
     
@@ -31,8 +28,14 @@
             $errors['categories_description'] = "Mô tả phải ít nhất 6 ký tự.";
         }
 
+        if (strlen($categories_code) < 6) {
+            $errors['categories_code'] = "Mã phải ít nhất 5 ký tự.";
+        } elseif (strlen($categories_code) < 6) {
+            $errors['categories_code'] = "Mô tả tối đa 10 ký tự.";
+        }
+
         if (empty($errors)) {
-            $sql = "INSERT INTO categories (name, description) VALUES ('$categories_name', '$categories_description')";
+            $sql = "INSERT INTO categories (categories_code, categories_name, categories_description) VALUES ('$categories_code', '$categories_name', '$categories_description')";
             if ($conn->query($sql) === TRUE) {
                 $_SESSION['success_message'] = "Thêm danh mục thành công!";
                 header("Location: index.php");
@@ -43,6 +46,17 @@
         }
     }
 ?>
+<?php
+    include '../includes/header.php';
+?>
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quản trị danh mục</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
 <body class="bg-blue-100"> 
     <main class="flex flex-col items-center justify-start min-h-screen text-center px-6 mt-20">
     <div class="bg-white p-8 rounded-lg shadow-md w-full max-w-md">
@@ -55,6 +69,17 @@
                         if (isset($errors['categories_name'])) {
                             echo "<div style='color: red;'>";
                             echo $errors['categories_name'];
+                            echo "</div>";
+                        }
+                    ?>
+                </div>
+                <div class="mb-4 text-left">
+                    <label class="block text-gray-700">Mã danh mục</label>
+                    <input type="text" placeholder="Nhập họ tên" name="categories_code" value="<?php echo $categories_code?>" class="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    <?php
+                        if (isset($errors['categories_code'])) {
+                            echo "<div style='color: red;'>";
+                            echo $errors['categories_code'];
                             echo "</div>";
                         }
                     ?>
