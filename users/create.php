@@ -10,12 +10,13 @@
 ?>
 <?php
 $errors = [];
-    $fullname = $email = $password = $confirm_password = "";
+    $fullname = $email = $password = $confirm_password = $role = "";
     if ($_SERVER['REQUEST_METHOD'] == "POST") {
         $fullname = htmlspecialchars($_POST['fullname']);
         $email = htmlspecialchars($_POST['email']);
         $password = htmlspecialchars($_POST['password']);
         $confirm_password = htmlspecialchars($_POST['confirm_password']);
+        $role = htmlspecialchars($_POST['role']);
     
         // Kiểm tra lỗi
         if (empty($fullname)) {
@@ -39,7 +40,13 @@ $errors = [];
         } elseif ($password !== $confirm_password) {
             $errors['confirm_password'] = "Mật khẩu xác nhận không khớp.";
         }
-    
+        
+        if (empty($_POST['role'])) {
+            $errors['role'] = "Vui lòng chọn vai trò.";
+        } elseif (!in_array($_POST['role'], ['admin', 'seller'])) {
+            $errors['role'] = "Vai trò không hợp lệ.";
+        }
+
         $avatar = "";
         if (isset($_FILES['avatar']) && $_FILES['avatar']['error'] == 0) {
             $targetDir = "../assets/images/avatar/";
@@ -75,7 +82,8 @@ $errors = [];
             } else {
                 $hashed_password = password_hash($password, PASSWORD_DEFAULT);
     
-                $sql = "INSERT INTO users (fullname, email, password, avatar) VALUES ('$fullname', '$email', '$hashed_password', '$avatar')";
+                $sql = "INSERT INTO users (fullname, email, password, role, avatar) 
+                        VALUES ('$fullname', '$email', '$hashed_password', '$role', '$avatar')";
                 if ($conn->query($sql) === TRUE) {
                     $_SESSION['success_message'] = "Thêm người dùng thành công!";
                     header("Location: index.php");
@@ -137,13 +145,27 @@ $errors = [];
                     ?>
                 </div>
                 <div class="mb-4 text-left">
-                    <label class="block text-gray-700">Xác nhận mật khẩu</label>
-                    <input type="password" placeholder="Xác nhận mật khẩu" name="confirm_password" value="<?php echo $confirm_password?>" class="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    <label class="block text-gray-700">Mật khẩu</label>
+                    <input type="confirm_password" placeholder="Nhập mật khẩu" name="confirm_password" value="<?php echo $confirm_password?>" class="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
                     <?php
                         if (isset($errors['confirm_password'])) {
                             echo "<div style='color: red;'>";
                             echo $errors['confirm_password'];
                             echo "</div>";
+                        }
+                    ?>
+                </div>
+                <div class="mb-4 text-left">
+                    <label class="block text-gray-700">Vai trò người dùng</label>
+                    <select name="role" class="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+                        <option value="">-- Chọn vai trò --</option>
+                        <option value="admin" <?= (isset($role) && $role === 'admin') ? 'selected' : '' ?>>Admin</option>
+                        <option value="seller" <?= (isset($role) && $role === 'seller') ? 'selected' : '' ?>>Seller</option>
+                    </select>
+
+                    <?php
+                        if (isset($errors['role'])) {
+                            echo "<div style='color: red;'>" . $errors['role'] . "</div>";
                         }
                     ?>
                 </div>

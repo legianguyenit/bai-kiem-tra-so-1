@@ -36,7 +36,7 @@
         }
 
         if (empty($errors)) {
-            $sql        = "SELECT * FROM users WHERE email = '$email'";
+            $sql = "SELECT * FROM users WHERE email = '$email'";
             $userResult = $conn->query($sql);
 
             if ($userResult->num_rows === 0) {
@@ -47,7 +47,8 @@
                 if (!password_verify($password, $userData['password'])) {
                     $errors['password'] = "Mật khẩu không đúng.";
                 } else {
-                    // Đặt cookie và redirect
+                    $_SESSION['user_id'] = $userData['id'];
+                    setcookie("role", $userData['role'], time() + 86400 * 30, "/");
                     setcookie("loggedin", "true", time() + 86400 * 30, "/");
                     setcookie("fullname",  $userData['fullname'], time() + 86400 * 30, "/");
                     header("Location: dashboard.php");

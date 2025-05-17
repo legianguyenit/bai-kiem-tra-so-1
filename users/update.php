@@ -27,7 +27,7 @@
 ?>
 <?php
     $errors = [];
-    $fullname = $email = $password = $confirm_password = "";
+    $fullname = $email = $password = $confirm_password = $role = "";
     $avatar = $old_avatar;
 
     if ($_SERVER['REQUEST_METHOD'] == "POST") {
@@ -35,6 +35,7 @@
         $email = htmlspecialchars($_POST['email']);
         $password = htmlspecialchars($_POST['password']);
         $confirm_password = htmlspecialchars($_POST['confirm_password']);
+        $role = htmlspecialchars($_POST['role']);
 
         // Xử lý upload avatar mới
         if (isset($_FILES['avatar']) && $_FILES['avatar']['error'] == 0) {
@@ -70,6 +71,12 @@
             $errors['email'] = "Email không hợp lệ.";
         }
 
+        if (empty($_POST['role'])) {
+            $errors['role'] = "Vui lòng chọn vai trò.";
+        } elseif (!in_array($_POST['role'], ['admin', 'seller'])) {
+            $errors['role'] = "Vai trò không hợp lệ.";
+        }
+
         // Xử lý mật khẩu chỉ khi có nhập
         $password_update = '';
         if (!empty($password)) {
@@ -87,7 +94,7 @@
             if ($result->num_rows > 0) {
                 $errors['email'] = "Email đã được sử dụng.";
             } else {
-                $sql = "UPDATE users SET fullname = '$fullname', email = '$email', avatar = '$avatar' $password_update WHERE id = '$id'";
+                $sql = "UPDATE users SET fullname = '$fullname', email = '$email', avatar = '$avatar', role = '$role' $password_update WHERE id = '$id'";
 
                 if ($conn->query($sql) === TRUE) {
                     $_SESSION['success_message'] = "Cập nhật người dùng thành công!";
@@ -150,6 +157,20 @@
                             echo "<div style='color: red;'>";
                             echo $errors['confirm_password'];
                             echo "</div>";
+                        }
+                    ?>
+                </div>
+                <div class="mb-4 text-left">
+                    <label class="block text-gray-700">Vai trò người dùng</label>
+                    <select name="role" class="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+                        <option value="">-- Chọn vai trò --</option>
+                        <option value="admin" <?= (isset($role) && $role === 'admin') ? 'selected' : '' ?>>Admin</option>
+                        <option value="seller" <?= (isset($role) && $role === 'seller') ? 'selected' : '' ?>>Seller</option>
+                    </select>
+
+                    <?php
+                        if (isset($errors['role'])) {
+                            echo "<div style='color: red;'>" . $errors['role'] . "</div>";
                         }
                     ?>
                 </div>

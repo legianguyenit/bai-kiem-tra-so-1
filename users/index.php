@@ -56,6 +56,7 @@
                     <th class="p-3 border text-left font-semibold">Ảnh đại diện</th>
                     <th class="p-3 border text-left font-semibold">Họ và tên</th>
                     <th class="p-3 border text-left font-semibold">Email</th>
+                    <th class="p-3 border text-left font-semibold">Role</th>
                     <!-- <th class="p-3 border text-left font-semibold">Password</th> -->
                     <th class="p-3 border text-left font-semibold">Ngày tạo</th>
                     <th class="p-3 border text-left font-semibold">Ngày cập nhật</th>
@@ -88,6 +89,7 @@
                                         </button>
                                     </div>
                                 </td> -->
+                                <td class="p-3 border">' . $row["role"] . '</td>
                                 <td class="p-3 border">' . $row["created_at"] . '</td>
                                 <td class="p-3 border">' . $row["updated_at"] . '</td>
                                 <td class="p-3 border">

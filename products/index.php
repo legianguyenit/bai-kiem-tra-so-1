@@ -69,22 +69,22 @@
                     $result = $conn->query("SELECT * FROM products");
                     while ($row = $result->fetch_assoc()) {
                         // Xác định hình ảnh sản phẩm
-                        $image = $row['image'] ? $row['image'] : 'default-product.png';
+                        $image = $row['product_image'] ? $row['product_image'] : 'default-product.png';
                         echo '<tr class="border-b">';
-                        echo '<td class="p-3 border">' . htmlspecialchars($row['id']) . '</td>';
+                        echo '<td class="p-3 border">' . htmlspecialchars($row['product_code']) . '</td>';
                         echo '<td class="p-3 border">';
-                        echo '<img src="../assets/images/products/' . htmlspecialchars($image) . '" alt="' . htmlspecialchars($row['name']) . '" class="w-16 h-16 object-cover rounded">';
+                        echo '<img src="../assets/images/products/' . htmlspecialchars($image) . '" alt="' . htmlspecialchars($row['product_name']) . '" class="w-16 h-16 object-cover rounded">';
                         echo '</td>';
-                        echo '<td class="p-3 border">' . htmlspecialchars($row['name']) . '</td>';
-                        echo '<td class="p-3 border">' . number_format($row['price'], 0, ',', '.') . '₫</td>';
-                        echo '<td class="p-3 border max-w-xs truncate">' . htmlspecialchars($row['description']) . '</td>';
-                        echo '<td class="p-3 border">' . htmlspecialchars($row['category']) . '</td>';
-                        echo '<td class="p-3 border">' . htmlspecialchars($row['created_at']) . '</td>';
-                        echo '<td class="p-3 border">' . htmlspecialchars($row['updated_at']) . '</td>';
+                        echo '<td class="p-3 border">' . htmlspecialchars($row['product_name']) . '</td>';
+                        echo '<td class="p-3 border">' . number_format($row['product_price'], 0, ',', '.') . '₫</td>';
+                        echo '<td class="p-3 border max-w-xs truncate">' . htmlspecialchars($row['product_description']) . '</td>';
+                        echo '<td class="p-3 border">' . htmlspecialchars($row['categories_code']) . '</td>';
+                        echo '<td class="p-3 border">' . $row['created_at'] . '</td>';
+                        echo '<td class="p-3 border">' . $row['updated_at'] . '</td>';
                         echo '<td class="p-3 border">';
                         echo '<div class="flex flex-wrap gap-2 justify-center">';
-                        echo '<a href="update.php?id=' . $row['id'] . '" class="bg-blue-600 text-white px-4 py-1 rounded">Sửa</a>';
-                        echo '<a href="delete.php?id=' . $row['id'] . '" onclick="return confirm(\'Bạn có chắc muốn xoá sản phẩm này?\')" class="bg-red-600 text-white px-4 py-1 rounded">Xóa</a>';
+                        echo '<a href="update.php?product_code=' . $row['product_code'] . '" class="bg-blue-600 text-white px-4 py-1 rounded">Sửa</a>';
+                        echo '<a href="delete.php?product_code=' . $row['product_code'] . '" onclick="return confirm(\'Bạn có chắc muốn xoá sản phẩm này?\')" class="bg-red-600 text-white px-4 py-1 rounded">Xóa</a>';
                         echo '</div>';
                         echo '</td>';
                         echo '</tr>';

@@ -10,82 +10,85 @@
 ?>
 <?php
 $errors = [];
-    $fullname = $email = $password = $confirm_password = "";
-    if ($_SERVER['REQUEST_METHOD'] == "POST") {
-        $fullname = htmlspecialchars($_POST['fullname']);
-        $email = htmlspecialchars($_POST['email']);
-        $password = htmlspecialchars($_POST['password']);
-        $confirm_password = htmlspecialchars($_POST['confirm_password']);
-    
-        // Kiểm tra lỗi
-        if (empty($fullname)) {
-            $errors['fullname'] = "Vui lòng nhập họ tên.";
-        }
-    
-        if (empty($email)) {
-            $errors['email'] = "Vui lòng nhập email.";
-        } elseif (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
-            $errors['email'] = "Email không hợp lệ.";
-        }
-    
-        if (empty($password)) {
-            $errors['password'] = "Vui lòng nhập mật khẩu.";
-        } elseif (strlen($password) < 6) {
-            $errors['password'] = "Mật khẩu phải ít nhất 6 ký tự.";
-        }
-    
-        if (empty($confirm_password)) {
-            $errors['confirm_password'] = "Vui lòng xác nhận mật khẩu.";
-        } elseif ($password !== $confirm_password) {
-            $errors['confirm_password'] = "Mật khẩu xác nhận không khớp.";
-        }
-    
-        $avatar = "";
-        if (isset($_FILES['avatar']) && $_FILES['avatar']['error'] == 0) {
-            $targetDir = "../assets/images/avatar/";
-            $avatarName = time() . "_" . basename($_FILES["avatar"]["name"]);
-            $targetFile = $targetDir . $avatarName;
-            
-            $imageFileType = strtolower(pathinfo($targetFile, PATHINFO_EXTENSION));
-            $allowedTypes = ['jpg', 'jpeg', 'png', 'gif'];
-            
-            if (in_array($imageFileType, $allowedTypes)) {
-                if (move_uploaded_file($_FILES["avatar"]["tmp_name"], $targetFile)) {
-                    $avatar = $avatarName;
-                } else {
-                    $errors['avatar'] = "Lỗi khi tải lên ảnh.";
-                }
-            } else {
-                $errors['avatar'] = "Chỉ hỗ trợ các định dạng ảnh JPG, JPEG, PNG, GIF.";
-            }
-        }
+$product_code = $product_name = $product_price = $product_description = $categories_code = "";
 
-        if (empty($avatar)) {
-            $errors['avatar'] = "Vui lòng không để trống Avatar.";
-        }
-    
-        // Nếu không có lỗi thì thực hiện lưu dữ liệu vào MySQL
-        if (empty($errors)) {
-            // Kiểm tra email đã có trong CSDL chưa
-            $sql = "SELECT * FROM users WHERE email = '$email'";
-            $result = $conn->query($sql);
-    
-            if ($result->num_rows > 0) {
-                $errors['email'] = "Email đã được sử dụng.";
+// Lấy danh sách categories
+$categories = [];
+$sqlCat = "SELECT categories_code, categories_name FROM categories";
+if ($resCat = $conn->query($sqlCat)) {
+    while ($row = $resCat->fetch_assoc()) {
+        $categories[] = $row;
+    }
+    $resCat->free();
+} else {
+    echo "🔴 Lỗi khi lấy danh mục: " . $conn->error;
+}
+
+if ($_SERVER['REQUEST_METHOD'] == "POST") {
+    $product_code = htmlspecialchars($_POST['product_code']);
+    $product_name = htmlspecialchars($_POST['product_name']);
+    $product_price = htmlspecialchars($_POST['product_price']);
+    $product_description = htmlspecialchars($_POST['product_description']);
+    $categories_code = htmlspecialchars($_POST['categories_code']);
+
+    // Kiểm tra lỗi
+    if (empty($product_code)) {
+        $errors['product_code'] = "Vui lòng nhập mã sản phẩm.";
+    }
+
+    if (empty($product_name)) {
+        $errors['product_name'] = "Vui lòng nhập tên sản phẩm.";
+    }
+
+    if (empty($product_price)) {
+        $errors['product_price'] = "Vui lòng nhập giá sản phẩm.";
+    }
+
+    if (empty($product_description)) {
+        $errors['product_description'] = "Vui lòng nhập mô tả.";
+    }
+
+    if (empty($categories_code)) {
+        $errors['categories_code'] = "Vui lòng chọn danh mục sản phẩm.";
+    }
+
+    $product_image = "";
+    if (isset($_FILES['product_image']) && $_FILES['product_image']['error'] == 0) {
+        $targetDir = "../assets/images/products/";
+        $product_image_Name = time() . "_" . basename($_FILES["product_image"]["name"]);
+        $targetFile = $targetDir . $product_image_Name;
+
+        $imageFileType = strtolower(pathinfo($targetFile, PATHINFO_EXTENSION));
+        $allowedTypes = ['jpg', 'jpeg', 'png', 'gif'];
+
+        if (in_array($imageFileType, $allowedTypes)) {
+            if (move_uploaded_file($_FILES["product_image"]["tmp_name"], $targetFile)) {
+                $product_image = $product_image_Name;
             } else {
-                $hashed_password = password_hash($password, PASSWORD_DEFAULT);
-    
-                $sql = "INSERT INTO users (fullname, email, password, avatar) VALUES ('$fullname', '$email', '$hashed_password', '$avatar')";
-                if ($conn->query($sql) === TRUE) {
-                    $_SESSION['success_message'] = "Thêm người dùng thành công!";
-                    header("Location: index.php");
-                    exit();
-                } else {
-                    echo "🔴 Lỗi: " . $conn->error;
-                }
+                $errors['product_image'] = "Lỗi khi tải lên ảnh.";
             }
+        } else {
+            $errors['product_image'] = "Chỉ hỗ trợ các định dạng ảnh JPG, JPEG, PNG, GIF.";
         }
     }
+
+    if (empty($product_image)) {
+        $errors['product_image'] = "Vui lòng không để trống hình sản phẩm.";
+    }
+
+    if (empty($errors)) {
+        $sql = "INSERT INTO products (product_code, product_name, product_image, product_price, product_description, categories_code)
+                VALUES ('$product_code', '$product_name', '$product_image', '$product_price', '$product_description', '$categories_code')";
+
+        if ($conn->query($sql) === TRUE) {
+            $_SESSION['success_message'] = "Thêm sản phẩm thành công!";
+            header("Location: index.php");
+            exit();
+        } else {
+            echo "🔴 Lỗi khi thêm sản phẩm: " . $conn->error;
+        }
+    }
+}
 ?>
 <?php
     include '../includes/header.php';
@@ -104,56 +107,76 @@ $errors = [];
             <h2 class="text-2xl font-bold mb-6">Thêm sản phẩm</h2> 
             <form action="create.php" method="POST" enctype="multipart/form-data">
                 <div class="mb-4 text-left">
-                    <label class="block text-gray-700">Họ và tên</label>
-                    <input type="text" placeholder="Nhập họ tên" name="fullname" value="<?php echo $fullname?>" class="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    <label class="block text-gray-700">Tên sản phẩm</label>
+                    <input type="text" placeholder="Nhập tên sản phẩm" name="product_name" value="<?php echo $product_name?>" class="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
                     <?php
-                        if (isset($errors['fullname'])) {
+                        if (isset($errors['product_name'])) {
                             echo "<div style='color: red;'>";
-                            echo $errors['fullname'];
+                            echo $errors['product_name'];
                             echo "</div>";
                         }
                     ?>
                 </div>
                 <div class="mb-4 text-left">
-                    <label class="block text-gray-700">Email</label>
-                    <input type="email" placeholder="Nhập email" name="email" value="<?php echo $email?>" class="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    <label class="block text-gray-700">Mã sản phẩm</label>
+                    <input type="text" placeholder="Nhập mã sản phẩm" name="product_code" value="<?php echo $product_code	?>" class="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
                     <?php
-                        if (isset($errors['email'])) {
+                        if (isset($errors['product_code'])) {
                             echo "<div style='color: red;'>";
-                            echo $errors['email'];
+                            echo $errors['product_code'];
                             echo "</div>";
                         }
                     ?>
                 </div>
                 <div class="mb-4 text-left">
-                    <label class="block text-gray-700">Mật khẩu</label>
-                    <input type="password" placeholder="Nhập mật khẩu" name="password" value="<?php echo $password?>" class="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    <label class="block text-gray-700">Giá sản phẩm</label>
+                    <input type="text" placeholder="Nhập giá sản phẩm" name="product_price" value="<?php echo $product_price?>" class="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
                     <?php
-                        if (isset($errors['password'])) {
+                        if (isset($errors['product_price'])) {
                             echo "<div style='color: red;'>";
-                            echo $errors['password'];
+                            echo $errors['product_price'];
                             echo "</div>";
                         }
                     ?>
                 </div>
                 <div class="mb-4 text-left">
-                    <label class="block text-gray-700">Xác nhận mật khẩu</label>
-                    <input type="password" placeholder="Xác nhận mật khẩu" name="confirm_password" value="<?php echo $confirm_password?>" class="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    <label class="block text-gray-700">Mô tả sản phẩm</label>
+                    <input type="text" placeholder="Nhập mô tả sản phẩm" name="product_description" value="<?php echo $product_description?>" class="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
                     <?php
-                        if (isset($errors['confirm_password'])) {
+                        if (isset($errors['product_description'])) {
                             echo "<div style='color: red;'>";
-                            echo $errors['confirm_password'];
+                            echo $errors['product_description'];
                             echo "</div>";
                         }
                     ?>
                 </div>
                 <div class="mb-4 text-left">
-                    <label class="block text-gray-700">Avatar</label>
-                    <input type="file" name="avatar" class="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    <label class="block text-gray-700">Danh mục sản phẩm</label>
+                    <select name="categories_code"
+                        class="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+                        <option value="">-- Chọn danh mục --</option>
+                        <?php foreach ($categories as $cat): ?>
+                            <option value="<?php echo $cat['categories_code']; ?>"
+                                <?php if ($categories_code === $cat['categories_code']) echo 'selected'; ?>>
+                                <?php echo $cat['categories_name']; ?>
+                            </option>
+                        <?php endforeach; ?>
+                    </select>
                     <?php
-                        if (isset($errors['avatar'])) {
+                        if (isset($errors['categories_code'])) {
                             echo "<div style='color: red;'>";
-                            echo $errors['avatar'];
+                            echo $errors['categories_code'];
+                            echo "</div>";
+                        }
+                    ?>
+                </div>
+                <div class="mb-4 text-left">
+                    <label class="block text-gray-700">Hình ảnh sản phẩm</label>
+                    <input type="file" name="product_image" class="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    <?php
+                        if (isset($errors['product_image'])) {
+                            echo "<div style='color: red;'>";
+                            echo $errors['product_image'];
                             echo "</div>";
                         }
                     ?>
