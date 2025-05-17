@@ -51,7 +51,8 @@
                 $errors['email'] = "Email đã được sử dụng.";
             } else {
                 $hashed_password = password_hash($password, PASSWORD_DEFAULT);
-                $sql = "INSERT INTO users (fullname, email, password) VALUES ('$fullname', '$email', '$hashed_password')";
+                $role = 'customer';
+                $sql = "INSERT INTO users (fullname, email, password, role) VALUES ('$fullname', '$email', '$hashed_password', '$role')";
                 if ($conn->query($sql) === TRUE) {
                     setcookie("registered", "true", time() + 86400, "/");
                     $_SESSION['success_message'] = "Đăng ký thành công, vui lòng đăng nhập!";

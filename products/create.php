@@ -59,7 +59,7 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
         $targetFile = $targetDir . $product_image_Name;
 
         $imageFileType = strtolower(pathinfo($targetFile, PATHINFO_EXTENSION));
-        $allowedTypes = ['jpg', 'jpeg', 'png', 'gif'];
+        $allowedTypes = ['jpg', 'jpeg', 'png', 'gif', 'webp'];
 
         if (in_array($imageFileType, $allowedTypes)) {
             if (move_uploaded_file($_FILES["product_image"]["tmp_name"], $targetFile)) {
@@ -68,7 +68,7 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
                 $errors['product_image'] = "Lỗi khi tải lên ảnh.";
             }
         } else {
-            $errors['product_image'] = "Chỉ hỗ trợ các định dạng ảnh JPG, JPEG, PNG, GIF.";
+            $errors['product_image'] = "Chỉ hỗ trợ các định dạng ảnh JPG, JPEG, PNG, GIF, WEBP.";
         }
     }
 

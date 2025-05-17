@@ -16,8 +16,7 @@ if (!$user_id) {
     exit();
 }
 
-// Truy vấn người dùng từ database (KHÔNG dùng stmt)
-$sql = "SELECT fullname, email, avatar, created_at, updated_at FROM users WHERE id = $user_id";
+$sql = "SELECT fullname,role, email, avatar, created_at, updated_at FROM users WHERE id = $user_id";
 $result = mysqli_query($conn, $sql);
 
 if (!$result || mysqli_num_rows($result) === 0) {
@@ -46,6 +45,10 @@ $user = mysqli_fetch_assoc($result);
         </div>
 
         <div class="space-y-4 text-left">
+            <div>
+                <p class="text-gray-600 font-semibold">Vai trò:</p>
+                <p class="text-lg"><?= htmlspecialchars($user['role']) ?></p>
+            </div>
             <div>
                 <p class="text-gray-600 font-semibold">Họ và tên:</p>
                 <p class="text-lg"><?= htmlspecialchars($user['fullname']) ?></p>

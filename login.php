@@ -50,8 +50,14 @@
                     $_SESSION['user_id'] = $userData['id'];
                     setcookie("role", $userData['role'], time() + 86400 * 30, "/");
                     setcookie("loggedin", "true", time() + 86400 * 30, "/");
-                    setcookie("fullname",  $userData['fullname'], time() + 86400 * 30, "/");
-                    header("Location: dashboard.php");
+                    setcookie("fullname", $userData['fullname'], time() + 86400 * 30, "/");
+
+                    // Chuyển hướng theo vai trò
+                    if ($userData['role'] === 'admin' || $userData['role'] === 'seller') {
+                        header("Location: dashboard.php");
+                    } else {
+                        header("Location: index.php");
+                    }
                     exit();
                 }
             }
